@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import galeriaNFTs.application.services.FavoriteService;
 import galeriaNFTs.application.services.UsuarioService;
 import galeriaNFTs.domain.models.Usuario;
 import jakarta.servlet.ServletException;
@@ -37,16 +38,18 @@ public class UsuarioController extends HttpServlet {
         resp.setHeader("Access-Control-Allow-Headers", "content-type, authorization");
     }
 
-    // TRAER USUARIOS POR MAIL O TODOS
+    // CHEQUEA SI EXISTE 1 USUARIO POR EMAIL Y PASSWORD
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         configureCorsHeaders(resp);
         String email = req.getParameter("email");
+        String password = req.getParameter("password");
 
-        // Verificar si el parámetro "email" está presente en la solicitud
-        if (email != null) {
-            Usuario usuario = service.findByEmail(email);
+        // Verificar si los parámetros "email" y "password" están presentes en la
+        // solicitud
+        if (email != null && password != null) {
+            Usuario usuario = service.autorizaLogin(email, password);
             if (usuario != null) {
                 resp.setStatus(200);
                 resp.setContentType("application/json");
@@ -55,18 +58,14 @@ public class UsuarioController extends HttpServlet {
 
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("Usuario no encontrado ");
+                resp.getWriter().write("LOS DATOS NO SON CORRECTOS");
 
             }
 
         } else {
-            ArrayList<Usuario> usuarios = service.getAllUsuario();
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().write("EL EMAIL O LA PASSWORD NO FUERON INGRESADOS");
 
-            resp.getWriter().write(mapper.writeValueAsString(usuarios));
-            resp.getWriter().write(email);
         }
     }
 

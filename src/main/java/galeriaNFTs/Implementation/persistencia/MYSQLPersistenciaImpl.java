@@ -1,6 +1,7 @@
-package galeriaNFTs.infrastructure.persistencia.database;
+package galeriaNFTs.Implementation.persistencia;
 
 import galeriaNFTs.domain.models.Usuario;
+import galeriaNFTs.infrastructure.persistencia.database.DataConecction;
 import galeriaNFTs.repositories.Ipersistencia.IPersistencia;
 
 import java.sql.Connection;
@@ -11,21 +12,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MYSQLPersistenciaImpl implements IPersistencia {
-    
-    private Connection conexion ;
-    
+
+    private Connection conexion;
+
     public MYSQLPersistenciaImpl() {
         this.conexion = DataConecction.getConnection();
     }
-    
+
     // METODO PARA GUARDAR UN USUARIO EN LA BASE DE DATOS
     @Override
     public void saveUser(Usuario usuario) {
-        
+
         // PRIMER PASO PARA OBTNER CONEXION
         String insertSQL = "INSERT INTO usuarios (nombre, apellido, email, password) VALUES (?,?,?,?)";
-        
+        String checkEmailSQL = "SELECT COUNT(*) FROM usuarios WHERE email = ?";
+
         try {
+
+            // PASO UNO: COMPROBAR SI EL EMAIL YA EXISTE
+            PreparedStatement checkEmailStmt = conexion.prepareStatement(checkEmailSQL);
+            checkEmailStmt.setString(1, usuario.getEmail());
+            ResultSet rs = checkEmailStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new RuntimeException("El email ya está registrado en la base de datos.");
+            }
+            rs.close();
+            checkEmailStmt.close();
+
             // PASO DOS PREPARAR LA QUERY
             PreparedStatement preparador = conexion.prepareStatement(insertSQL);
             preparador.setString(1, usuario.getNombre());
@@ -33,15 +46,13 @@ public class MYSQLPersistenciaImpl implements IPersistencia {
             preparador.setString(3, usuario.getEmail());
             preparador.setString(4, usuario.getPassword());
             preparador.executeUpdate();
-            preparador.close();           
-            
-          
+            preparador.close();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
-    }
 
+    }
 
     /// METODO PARA TRAER UN USUARIOS DE LA BASE DE DATOS
     @Override
@@ -53,7 +64,7 @@ public class MYSQLPersistenciaImpl implements IPersistencia {
             preparador.setString(1, email);
 
             ResultSet resultados = preparador.executeQuery();
-            if(resultados.next()) {
+            if (resultados.next()) {
                 Usuario usuario = new Usuario();
                 usuario.setId(resultados.getInt("id"));
                 usuario.setNombre(resultados.getString("nombre"));
@@ -69,8 +80,35 @@ public class MYSQLPersistenciaImpl implements IPersistencia {
         return null;
     }
 
-    
-    /// METODO PARA TRAER  TODOS LOS REGISTRO DE LA BASE DE DATOS
+    // METODO VERIFICA LOS DATOS PARA LA AUTENTICACION DE USUARIOS,
+    // VERIFICA SI EL EMAIL Y LA CONTRASEÑA EXISTEN EN LA BASE DE DATOS
+    @Override
+    public Usuario autorizaLogin(String email, String password) {
+        String sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
+
+        try {
+            PreparedStatement preparador = conexion.prepareStatement(sql);
+            preparador.setString(1, email);
+            preparador.setString(2, password);
+
+            ResultSet resultados = preparador.executeQuery();
+            if (resultados.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(resultados.getInt("id"));
+                usuario.setNombre(resultados.getString("nombre"));
+                usuario.setApellido(resultados.getString("apellido"));
+                usuario.setPassword(resultados.getString("password"));
+                usuario.setEmail(resultados.getString("email"));
+                return usuario;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /// METODO PARA TRAER TODOS LOS REGISTRO DE LA BASE DE DATOS
     @Override
     public ArrayList<Usuario> getAllUsuario() {
         // PRIMER PASO PARA OBTNER CONEXION
@@ -83,15 +121,14 @@ public class MYSQLPersistenciaImpl implements IPersistencia {
             ResultSet tablaResultSet = preparador.executeQuery();
 
             while (tablaResultSet.next()) {
-                
+
                 Usuario usuario = new Usuario();
-                
+
                 usuario.setId(tablaResultSet.getInt("id"));
                 usuario.setNombre(tablaResultSet.getString("nombre"));
                 usuario.setApellido(tablaResultSet.getString("apellido"));
                 usuario.setEmail(tablaResultSet.getString("email"));
                 usuario.setPassword(tablaResultSet.getString("password"));
-                
 
                 usuarios.add(usuario);
 
@@ -115,12 +152,11 @@ public class MYSQLPersistenciaImpl implements IPersistencia {
 
             // EJECUTAR LA QUERY
             preparador.executeUpdate();
-          
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
     }
-
 
 }
