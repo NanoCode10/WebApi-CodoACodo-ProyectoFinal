@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import galeriaNFTs.Implementation.persistencia.MYSQLPersistenciaFavoriteImpl;
 
 import galeriaNFTs.domain.models.Favorite;
-import galeriaNFTs.domain.models.Usuario;
 
 import galeriaNFTs.repositories.Ipersistencia.IPersistenciaFavorite;
 
@@ -19,15 +18,13 @@ public class FavoriteService implements IPersistenciaFavorite {
     }
 
     @Override
-    public Usuario findByFavoriteUser(Integer idUser) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByFavoriteUser'");
+    public ArrayList<Favorite> findByFavoriteUser(Integer idUser) {
+        return sistemaFavoritePersistencia.findByFavoriteUser(idUser);
     }
 
     @Override
     public void deleteFavorite(int idNft, int idUser) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteFavorite'");
+        sistemaFavoritePersistencia.deleteFavorite(idNft, idUser);
     }
 
 }

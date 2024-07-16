@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import galeriaNFTs.application.services.FavoriteService;
 import galeriaNFTs.domain.models.Favorite;
-
+import galeriaNFTs.domain.models.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -38,38 +38,35 @@ public class FavoriteController extends HttpServlet {
         resp.setHeader("Access-Control-Allow-Headers", "content-type, authorization");
     }
 
-    // CHEQUEA SI EXISTE 1 USUARIO POR EMAIL Y PASSWORD
-    /*
-     * @Override
-     * protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-     * throws ServletException, IOException {
-     * configureCorsHeaders(resp);
-     * String email = req.getParameter("email");
-     * String password = req.getParameter("password");
-     * 
-     * // Verificar si los parámetros "email" y "password" están presentes en la
-     * // solicitud
-     * if (email != null && password != null) {
-     * Usuario usuario = service.autorizaLogin(email, password);
-     * if (usuario != null) {
-     * resp.setStatus(200);
-     * resp.setContentType("application/json");
-     * resp.setCharacterEncoding("UTF-8");
-     * resp.getWriter().write(mapper.writeValueAsString(usuario));
-     * 
-     * } else {
-     * resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-     * resp.getWriter().write("LOS DATOS NO SON CORRECTOS");
-     * 
-     * }
-     * 
-     * } else {
-     * resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-     * resp.getWriter().write("EL EMAIL O LA PASSWORD NO FUERON INGRESADOS");
-     * 
-     * }
-     * }
-     */
+    // OBTENER FAVORITOS POR USUARIO
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        configureCorsHeaders(resp);
+        String idUserParam = req.getParameter("idUser");
+
+        if (idUserParam != null) {
+            Integer idUser = Integer.parseInt(idUserParam);
+            ArrayList<Favorite> favorites = service.findByFavoriteUser(idUser);
+            if (favorites != null) {
+                resp.setStatus(200);
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                resp.getWriter().write(mapper.writeValueAsString(favorites));
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                resp.getWriter().write("Favoritos no encontrado");
+            }
+
+        } else {
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+
+            resp.getWriter().write("Favoritos no puede ser nulo");
+        }
+    }
 
     // GUARDAR USUARIOS
     @Override
@@ -87,22 +84,22 @@ public class FavoriteController extends HttpServlet {
     }
 
     // ELIMINAR USUARIOS
-    /*
-     * @Override
-     * protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-     * throws ServletException, IOException {
-     * String idString = req.getPathInfo().substring(1);
-     * 
-     * if (idString != null && !idString.isEmpty()) {
-     * int id = Integer.parseInt(idString);
-     * service.deleteUsuario(id);
-     * resp.setStatus(200);
-     * resp.getWriter().write("EL USUARIO CON ID " + idString +
-     * " FUE ELIMINADO CORRECTAMENTE");
-     * } else {
-     * resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-     * resp.getWriter().write("ID DE USUARIO INVALIDO " + idString);
-     * }
-     * }
-     */
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String idNft = req.getParameter("idnft");
+        String idUser = req.getParameter("iduser");
+
+        if (idNft != null && !idNft.isEmpty()) {
+            int idNftInt = Integer.parseInt(idNft);
+            int idUserInt = Integer.parseInt(idUser);
+            service.deleteFavorite(idNftInt, idUserInt);
+            resp.setStatus(200);
+            resp.getWriter().write("EL NFT SE ELIMINO DE FAVORITOS");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("ID DEL USUARIO O EL ID NFT ES INVALIDO");
+        }
+    }
+
 }
