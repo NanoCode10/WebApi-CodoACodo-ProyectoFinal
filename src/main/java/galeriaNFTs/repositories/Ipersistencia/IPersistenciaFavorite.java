@@ -10,6 +10,6 @@ public interface IPersistenciaFavorite {
 
     ArrayList<Favorite> findByFavoriteUser(Integer idUser);
 
-    void deleteFavorite(int idNft, int idUser);
+    void deleteFavorite(String idNft, int idUser);
 
 }

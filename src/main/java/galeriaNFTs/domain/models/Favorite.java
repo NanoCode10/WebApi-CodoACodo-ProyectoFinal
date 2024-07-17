@@ -11,7 +11,7 @@ public class Favorite {
 
     private int id;
     private int idUsuario;
-    private int nftId;
+    private String nftId;
     private double precio;
     private String name;
     private String subname;

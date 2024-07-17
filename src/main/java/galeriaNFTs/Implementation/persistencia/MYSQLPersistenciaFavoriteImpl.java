@@ -2,7 +2,7 @@ package galeriaNFTs.Implementation.persistencia;
 
 import galeriaNFTs.domain.models.Favorite;
 import galeriaNFTs.domain.models.Usuario;
-import galeriaNFTs.domain.models.Favorite;
+
 import galeriaNFTs.infrastructure.persistencia.database.DataConecction;
 
 import galeriaNFTs.repositories.Ipersistencia.IPersistenciaFavorite;
@@ -35,7 +35,7 @@ public class MYSQLPersistenciaFavoriteImpl implements IPersistenciaFavorite {
             PreparedStatement preparador = conexion.prepareStatement(insertSQL);
             preparador.setInt(1, favorite.getId());
             preparador.setInt(2, favorite.getIdUsuario());
-            preparador.setInt(3, favorite.getNftId());
+            preparador.setString(3, favorite.getNftId());
             preparador.setDouble(4, favorite.getPrecio());
             preparador.setString(5, favorite.getName());
             preparador.setString(6, favorite.getSubname());
@@ -65,7 +65,7 @@ public class MYSQLPersistenciaFavoriteImpl implements IPersistenciaFavorite {
                 Favorite favorite = new Favorite();
                 favorite.setId(resultados.getInt("id"));
                 favorite.setIdUsuario(resultados.getInt("id_usuario"));
-                favorite.setNftId(resultados.getInt("nft_id"));
+                favorite.setNftId(resultados.getString("nft_id"));
                 favorite.setPrecio(resultados.getDouble("precio"));
                 favorite.setName(resultados.getString("name"));
                 favorite.setSubname(resultados.getString("subname"));
@@ -82,13 +82,13 @@ public class MYSQLPersistenciaFavoriteImpl implements IPersistenciaFavorite {
 
     // METODO PARA ELIMINAR UN FAVORITO DE LA BASE DE DATOS
     @Override
-    public void deleteFavorite(int idNft, int idUser) {
+    public void deleteFavorite(String idNft, int idUser) {
         // PRIMER PASO PARA OBTNER CONEXION
         String deleteSQL = "DELETE FROM Favoritos WHERE nft_id = ? AND id_usuario = ?";
         try {
             // PASO DOS PREPARAR LA QUERY
             PreparedStatement preparador = this.conexion.prepareStatement(deleteSQL);
-            preparador.setInt(1, idNft);
+            preparador.setString(1, idNft);
             preparador.setInt(2, idUser);
 
             // EJECUTAR LA QUERY preparador.executeUpdate();

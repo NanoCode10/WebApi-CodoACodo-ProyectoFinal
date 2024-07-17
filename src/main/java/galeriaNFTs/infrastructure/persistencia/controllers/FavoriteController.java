@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import galeriaNFTs.application.services.FavoriteService;
 import galeriaNFTs.domain.models.Favorite;
-import galeriaNFTs.domain.models.Usuario;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -80,7 +80,7 @@ public class FavoriteController extends HttpServlet {
 
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("application/json");
-        resp.getWriter().write("{\"message\":\"Usuario creado exitosamente\"}");
+        resp.getWriter().write("{\"message\":\"NFT creado exitosamente\"}");
     }
 
     // ELIMINAR USUARIOS
@@ -91,9 +91,9 @@ public class FavoriteController extends HttpServlet {
         String idUser = req.getParameter("iduser");
 
         if (idNft != null && !idNft.isEmpty()) {
-            int idNftInt = Integer.parseInt(idNft);
+
             int idUserInt = Integer.parseInt(idUser);
-            service.deleteFavorite(idNftInt, idUserInt);
+            service.deleteFavorite(idNft, idUserInt);
             resp.setStatus(200);
             resp.getWriter().write("EL NFT SE ELIMINO DE FAVORITOS");
         } else {

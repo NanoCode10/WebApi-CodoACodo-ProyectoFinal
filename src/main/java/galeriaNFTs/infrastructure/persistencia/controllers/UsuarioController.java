@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import galeriaNFTs.application.services.FavoriteService;
 import galeriaNFTs.application.services.UsuarioService;
 import galeriaNFTs.domain.models.Usuario;
 import jakarta.servlet.ServletException;

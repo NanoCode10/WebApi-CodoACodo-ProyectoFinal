@@ -23,7 +23,7 @@ public class FavoriteService implements IPersistenciaFavorite {
     }
 
     @Override
-    public void deleteFavorite(int idNft, int idUser) {
+    public void deleteFavorite(String idNft, int idUser) {
         sistemaFavoritePersistencia.deleteFavorite(idNft, idUser);
     }
 
