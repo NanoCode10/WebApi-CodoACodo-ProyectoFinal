@@ -1,11 +1,9 @@
-package galeriaNFTs.Implementation.persistencia;
+package galeriaNFTs.infrastructure.persistencia.Implementation;
 
 import galeriaNFTs.domain.models.Favorite;
-import galeriaNFTs.domain.models.Usuario;
 
+import galeriaNFTs.domain.repositories.Ipersistencia.IPersistenciaFavorite;
 import galeriaNFTs.infrastructure.persistencia.database.DataConecction;
-
-import galeriaNFTs.repositories.Ipersistencia.IPersistenciaFavorite;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

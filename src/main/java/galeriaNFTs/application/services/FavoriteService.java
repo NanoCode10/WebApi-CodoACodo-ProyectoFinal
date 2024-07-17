@@ -2,11 +2,9 @@ package galeriaNFTs.application.services;
 
 import java.util.ArrayList;
 
-import galeriaNFTs.Implementation.persistencia.MYSQLPersistenciaFavoriteImpl;
-
 import galeriaNFTs.domain.models.Favorite;
-
-import galeriaNFTs.repositories.Ipersistencia.IPersistenciaFavorite;
+import galeriaNFTs.domain.repositories.Ipersistencia.IPersistenciaFavorite;
+import galeriaNFTs.infrastructure.persistencia.Implementation.MYSQLPersistenciaFavoriteImpl;
 
 public class FavoriteService implements IPersistenciaFavorite {
 

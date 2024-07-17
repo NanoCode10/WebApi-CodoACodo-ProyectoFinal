@@ -1,10 +1,10 @@
-package galeriaNFTs.repositories.Ipersistencia;
+package galeriaNFTs.domain.repositories.Ipersistencia;
 
 import java.util.ArrayList;
 
 import galeriaNFTs.domain.models.Usuario;
 
-public interface IPersistencia {
+public interface IPersistenciaUsuario {
 
     void saveUser(Usuario usuario);
 

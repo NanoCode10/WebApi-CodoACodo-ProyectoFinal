@@ -1,8 +1,8 @@
-package galeriaNFTs.Implementation.persistencia;
+package galeriaNFTs.infrastructure.persistencia.Implementation;
 
 import galeriaNFTs.domain.models.Usuario;
+import galeriaNFTs.domain.repositories.Ipersistencia.IPersistenciaUsuario;
 import galeriaNFTs.infrastructure.persistencia.database.DataConecction;
-import galeriaNFTs.repositories.Ipersistencia.IPersistencia;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,11 +11,11 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 
-public class MYSQLPersistenciaImpl implements IPersistencia {
+public class MYSQLPersistenciaUserImpl implements IPersistenciaUsuario {
 
     private Connection conexion;
 
-    public MYSQLPersistenciaImpl() {
+    public MYSQLPersistenciaUserImpl() {
         this.conexion = DataConecction.getConnection();
     }
 

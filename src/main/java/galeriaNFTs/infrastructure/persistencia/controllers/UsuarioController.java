@@ -1,7 +1,6 @@
 package galeriaNFTs.infrastructure.persistencia.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

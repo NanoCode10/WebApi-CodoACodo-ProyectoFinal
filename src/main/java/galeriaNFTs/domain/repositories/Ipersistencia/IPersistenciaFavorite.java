@@ -1,4 +1,4 @@
-package galeriaNFTs.repositories.Ipersistencia;
+package galeriaNFTs.domain.repositories.Ipersistencia;
 
 import java.util.ArrayList;
 

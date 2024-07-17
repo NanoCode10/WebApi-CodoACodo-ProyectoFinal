@@ -2,13 +2,14 @@ package galeriaNFTs.application.services;
 
 import java.util.ArrayList;
 
-import galeriaNFTs.Implementation.persistencia.MYSQLPersistenciaImpl;
 import galeriaNFTs.domain.models.Usuario;
-import galeriaNFTs.repositories.Ipersistencia.IPersistencia;
 
-public class UsuarioService implements IPersistencia {
+import galeriaNFTs.domain.repositories.Ipersistencia.IPersistenciaUsuario;
+import galeriaNFTs.infrastructure.persistencia.Implementation.MYSQLPersistenciaUserImpl;
 
-    private IPersistencia sistemPersistencia = new MYSQLPersistenciaImpl();
+public class UsuarioService implements IPersistenciaUsuario {
+
+    private IPersistenciaUsuario sistemPersistencia = new MYSQLPersistenciaUserImpl();
 
     @Override
     public void saveUser(Usuario usuarios) {
